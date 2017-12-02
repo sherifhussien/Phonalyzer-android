@@ -1,8 +1,11 @@
 package com.example.sherifhussien.phonalyzer;
 
 import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +35,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -45,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
     private static MessageAdapter adapter;
 
     private static ArrayList<Message> messages;
+
     private static ListView messagesListView;
+
+    private static final String number="2001003835879";
 
 
     @Override
@@ -55,18 +62,18 @@ public class MainActivity extends AppCompatActivity {
 
         messages = new ArrayList<>();
 
-        messagesListView = (ListView) findViewById(R.id.message_list);
+        messagesListView = (ListView) findViewById(R.id.message_list_view);
         adapter = new MessageAdapter(this, messages);
-
         messagesListView.setAdapter(adapter);
 
-
+        // Class that answers queries about the state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         // Get details on the currently active default data network
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
         if (networkInfo != null && networkInfo.isConnected()) {
+
             //executing a thread
             PhonalyzerTask task = new PhonalyzerTask();
             task.execute(PHONALIZER_INITIATE_URL);
@@ -77,19 +84,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 //                Toast.makeText(MainActivity.this, "FAB clicked",Toast.LENGTH_LONG).show();
-                    PhonalyzerTask task1 = new PhonalyzerTask();
-                    String number="2001003835879";
+
                     messages.add(new Message(number,true));
                     adapter.notifyDataSetChanged();
-                    messagesListView.post(new Runnable(){
-                        public void run() {
-                            messagesListView.setSelection(messagesListView.getCount() - 1);
-                        }});
+                    messagesListView.setSelection(messagesListView.getCount() - 1);
+
+                    PhonalyzerTask task1 = new PhonalyzerTask();
                     task1.execute(PHONALIZER_CHAT_URL,number);
                 }
             });
 
-            final EditText edit=(EditText)findViewById(R.id.edit_text);
             Button send=(Button) findViewById(R.id.send_button);
             send.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -100,38 +104,34 @@ public class MainActivity extends AppCompatActivity {
 
                     if(!TextUtils.isEmpty(number)){
                         messages.add(new Message(number,true));
-                        editText.setText("");
                         adapter.notifyDataSetChanged();
-                        messagesListView.post(new Runnable(){
-                            public void run() {
-                                messagesListView.setSelection(messagesListView.getCount() - 1);
-                            }});
-                        PhonalyzerTask task1 = new PhonalyzerTask();
-                        task1.execute(PHONALIZER_CHAT_URL,number);
+                        messagesListView.setSelection(messagesListView.getCount() - 1);
+                        editText.setText("");
+
+
+                        PhonalyzerTask task2 = new PhonalyzerTask();
+                        task2.execute(PHONALIZER_CHAT_URL,number);
                     }
                 }
             });
 
 
         } else {
-            // Otherwise, display error
+
             View loadingIndicator = findViewById(R.id.loading_indicator);
             loadingIndicator.setVisibility(View.GONE);
-            TextView internet=(TextView)findViewById(R.id.internet);
+            TextView internet=(TextView)findViewById(R.id.internet_text_view);
             internet.setText("No internet connection.");
         }
-
-
 
 
     }
 
 
     /**
-     * Perform background operations and pubish results on the UI threads
+     * Perform background operations and publish results on the UI threads
      * Params refers to the parameters that would be parsed to your Task
      * Progress refers to the progress indicator/counter type
-     * a thread is a container that hold a sequance of instruction that the device will execute
      */
 
 
@@ -184,6 +184,15 @@ public class MainActivity extends AppCompatActivity {
             loadingIndicator.setVisibility(View.GONE);
 
             updateUi(message);
+
+            try {
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                r.play();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         /**
@@ -235,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                     urlConnection.setRequestMethod("POST");
                     urlConnection.setDoOutput(true);
                     urlConnection.addRequestProperty("Content-Type", "application/json");
-                    urlConnection.setRequestProperty ("Authorization", MainActivity.this.uuid);
+                    urlConnection.setRequestProperty ("Authorization", uuid);
 
                     os = urlConnection.getOutputStream();
                     writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
@@ -332,10 +341,7 @@ public class MainActivity extends AppCompatActivity {
 
             messages.add(message);
             adapter.notifyDataSetChanged();
-            messagesListView.post(new Runnable(){
-                public void run() {
-                    messagesListView.setSelection(messagesListView.getCount() - 1);
-                }});
+            messagesListView.setSelection(messagesListView.getCount() - 1);
 
         }
     }

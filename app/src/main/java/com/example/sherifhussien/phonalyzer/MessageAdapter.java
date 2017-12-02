@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class MessageAdapter extends ArrayAdapter<Message> {
 
     public MessageAdapter(Context context, ArrayList<Message> messages){
-        super(context,0,messages);
+        super(context,0,messages); //0 as i will override the getView
     }
 
     @NonNull
@@ -38,20 +38,21 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
         TextView messageView = (TextView) listItemView.findViewById(R.id.message_body);
         messageView.setText(currentMessage.getMessage());
-        GradientDrawable bgShape = (GradientDrawable)messageView.getBackground();
 
+        GradientDrawable bgShape = (GradientDrawable)messageView.getBackground();
 
 
         RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         if(currentMessage.isSender()){
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            params.setMargins(0, 16, 46, 16);
-//            int color = (0xFF & 0xff) << 24 | (0x99 & 0xff) << 16 | (0x99 & 0xff) << 8 | (0xFF & 0xff);
-            int color = 0xFF3232FF;
+            params.setMargins(0, 16, 16, 16);
+            int color = (0xFF & 0xff) << 24 | (0x99 & 0xff) << 16 | (0x99 & 0xff) << 8 | (0xFF & 0xff);
             bgShape.setColor(color);
 
         }else{
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            params.setMargins(16, 16, 0, 16);
+
             int color = (0xFF & 0xff) << 24 | (0x00 & 0xff) << 16 | (0x00 & 0xff) << 8 | (0xFF & 0xff);
             bgShape.setColor(color);
 
