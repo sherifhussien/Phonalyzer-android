@@ -2,6 +2,7 @@ package com.example.sherifhussien.phonalyzer;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -25,42 +26,37 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) 
+    {
         Message currentMessage = getItem(position);
 
         View listItemView = convertView;
 
-
-
-        if(listItemView == null){
+        if(listItemView == null)
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.message_item,parent,false);
-        }
 
         TextView messageView = (TextView) listItemView.findViewById(R.id.message_body);
         messageView.setText(currentMessage.getMessage());
 
         GradientDrawable bgShape = (GradientDrawable)messageView.getBackground();
 
-
-        RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        if(currentMessage.isSender()){
+        RelativeLayout.LayoutParams params= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 
+                                                                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+        if(currentMessage.isSender())
+        {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.setMargins(0, 16, 16, 16);
-            int color = (0xFF & 0xff) << 24 | (0x99 & 0xff) << 16 | (0x99 & 0xff) << 8 | (0xFF & 0xff);
+            int color = Color.parseColor("#3385ff"); //Light Blue
             bgShape.setColor(color);
 
-        }else{
+        }else
+        {
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.setMargins(16, 16, 0, 16);
-
-            int color = (0xFF & 0xff) << 24 | (0x00 & 0xff) << 16 | (0x00 & 0xff) << 8 | (0xFF & 0xff);
+            int color = Color.parseColor("#0052cc"); // A little bit darker Blue
             bgShape.setColor(color);
-
-
         }
         messageView.setLayoutParams(params);
-
-
 
         return listItemView;
     }
