@@ -18,9 +18,11 @@ import java.util.ArrayList;
  * Created by sherifhussien on 11/26/17.
  */
 
-public class MessageAdapter extends ArrayAdapter<Message> {
+public class MessageAdapter extends ArrayAdapter<Message> 
+{
 
-    public MessageAdapter(Context context, ArrayList<Message> messages){
+    public MessageAdapter(Context context, ArrayList<Message> messages)
+    {
         super(context,0,messages); //0 as i will override the getView
     }
 
@@ -48,8 +50,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             params.setMargins(0, 16, 16, 16);
             int color = Color.parseColor("#3385ff"); //Light Blue
             bgShape.setColor(color);
-
-        }else
+        }
+        else
         {
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.setMargins(16, 16, 0, 16);
