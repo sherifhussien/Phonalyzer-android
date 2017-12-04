@@ -36,6 +36,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.message_item,parent,false);
         }
 
+
         TextView messageView = (TextView) listItemView.findViewById(R.id.message_body);
         messageView.setText(currentMessage.getMessage());
 
@@ -52,7 +53,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         }else{
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.setMargins(16, 16, 0, 16);
-
             int color = (0xFF & 0xff) << 24 | (0x00 & 0xff) << 16 | (0x00 & 0xff) << 8 | (0xFF & 0xff);
             bgShape.setColor(color);
 

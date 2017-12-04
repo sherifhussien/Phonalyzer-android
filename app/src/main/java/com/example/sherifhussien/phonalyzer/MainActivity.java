@@ -75,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
         if (networkInfo != null && networkInfo.isConnected()) {
 
             //executing a thread
-            PhonalyzerTask task = new PhonalyzerTask();
-            task.execute(PHONALIZER_INITIATE_URL);
+            new PhonalyzerTask().execute(PHONALIZER_INITIATE_URL);
 
 
             ImageButton fab = (ImageButton) findViewById(R.id.fab);
@@ -89,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     messagesListView.setSelection(messagesListView.getCount() - 1);
 
-                    PhonalyzerTask task1 = new PhonalyzerTask();
-                    task1.execute(PHONALIZER_CHAT_URL,number);
+                    new PhonalyzerTask().execute(PHONALIZER_CHAT_URL,number);
                 }
             });
 
@@ -108,9 +106,7 @@ public class MainActivity extends AppCompatActivity {
                         messagesListView.setSelection(messagesListView.getCount() - 1);
                         editText.setText("");
 
-
-                        PhonalyzerTask task2 = new PhonalyzerTask();
-                        task2.execute(PHONALIZER_CHAT_URL,number);
+                        new PhonalyzerTask().execute(PHONALIZER_CHAT_URL,number);
                     }
                 }
             });
